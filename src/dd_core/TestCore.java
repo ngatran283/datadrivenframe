@@ -11,8 +11,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
 
 import dd_utils.ExcelReader;
 
@@ -27,7 +25,7 @@ public class TestCore {
 	public static Properties config = new Properties();
 	public static WebDriverWait wait;
 
-	@BeforeSuite
+	
 	public static void init() throws IOException {
 		if (driver == null) {
 			FileInputStream fis = new FileInputStream(System.getProperty("user.dir") + "\\src\\dd_properties\\OR.properties");
@@ -52,8 +50,4 @@ public class TestCore {
 		wait = new WebDriverWait(driver, WAIT_TIME_OUT);
 	}
 
-	@AfterSuite
-	public static void tearDown() {
-		driver.quit();
-	}
 }
