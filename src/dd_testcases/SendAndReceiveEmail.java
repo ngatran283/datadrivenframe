@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.AfterMethod;
@@ -14,6 +14,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import dd_core.TestCore;
+
 import dd_utils.CommonUtil;
 
 public class SendAndReceiveEmail extends TestCore {
@@ -31,28 +32,25 @@ public class SendAndReceiveEmail extends TestCore {
 
 	@Test(dataProvider = "getData")
 	public void sendEmail(Hashtable<String, String> data) {
-
-		driver.findElement(By.xpath(object.getProperty("username"))).sendKeys(data.get("Username"));
-		driver.findElement(By.xpath(object.getProperty("nextUser"))).click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(object.getProperty("password"))));
-		driver.findElement(By.xpath(object.getProperty("password"))).sendKeys(data.get("Password"));
-		driver.findElement(By.xpath(object.getProperty("nextPass"))).click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText(object.getProperty("inbox"))));
-		driver.findElement(By.xpath(object.getProperty("compose"))).click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(object.getProperty("receiver"))));
-		driver.findElement(By.xpath(object.getProperty("receiver"))).sendKeys(data.get("Receiver"));
-		driver.findElement(By.cssSelector(object.getProperty("subject"))).click();
-		driver.findElement(By.cssSelector(object.getProperty("subject"))).clear();
-		driver.findElement(By.cssSelector(object.getProperty("subject"))).sendKeys(data.get("Subject"));
-		driver.findElement(By.xpath(object.getProperty("body"))).click();
-		driver.findElement(By.xpath(object.getProperty("body"))).clear();
-		driver.findElement(By.xpath(object.getProperty("body"))).sendKeys(data.get("Body"));
-		driver.findElement(By.xpath(object.getProperty("sendBttn"))).click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText(object.getProperty("inbox1"))));
-		driver.findElement(By.linkText(object.getProperty("inbox1"))).click();
-		driver.findElement(By.xpath(object.getProperty("newEmailPos"))).click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(object.getProperty("subject-title"))));
-		String actual = driver.findElement(By.cssSelector(object.getProperty("subject-title"))).getText();
+		// login
+		type(By.xpath(object.getProperty("username")), data.get("Username"));
+		click(By.xpath(object.getProperty("nextUser")));
+		waitForVisibleOf(By.xpath(object.getProperty("password")));
+		type(By.xpath(object.getProperty("password")), data.get("Password"));
+		click(By.xpath(object.getProperty("nextPass")));
+		waitForVisibleOf(By.linkText(object.getProperty("inbox")));
+		// send email
+		click(By.xpath(object.getProperty("compose")));
+		waitForVisibleOf(By.xpath(object.getProperty("receiver")));
+		type(By.xpath(object.getProperty("receiver")), data.get("Receiver"));
+		type(By.cssSelector(object.getProperty("subject")), data.get("Subject"));
+		type(By.xpath(object.getProperty("body")), data.get("Body"));
+		click(By.xpath(object.getProperty("sendBttn")));
+		waitForVisibleOf(By.linkText(object.getProperty("inbox1")));
+		click(By.linkText(object.getProperty("inbox1")));
+		click(By.xpath(object.getProperty("newEmailPos")));
+		waitForVisibleOf(By.cssSelector(object.getProperty("subject-title")));
+		String actual = getTextElement(By.cssSelector(object.getProperty("subject-title")));
 		Assert.assertEquals(actual, data.get("Subject"), "send email successfully");
 
 	}
@@ -60,7 +58,7 @@ public class SendAndReceiveEmail extends TestCore {
 	@AfterMethod
 	public void closeBrowser() {
 		driver.close();
-		driver=null;
+		driver = null;
 	}
 
 	@DataProvider
