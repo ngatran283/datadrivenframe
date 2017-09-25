@@ -26,7 +26,7 @@ public class TestCore {
 			System.getProperty("user.dir") + "\\src\\dd_properties\\testdata.xlsx");
 	public static Properties object = new Properties();
 	public static Properties config = new Properties();
-	public static WebElement element = null;
+
 	public static WebDriverWait wait;
 
 	public static void init() throws IOException {
@@ -51,32 +51,30 @@ public class TestCore {
 
 		driver.get(config.getProperty("testsiteurl"));
 		driver.manage().timeouts().implicitlyWait(WAIT_TIME_OUT, TimeUnit.SECONDS);
-
+		wait = new WebDriverWait(driver, WAIT_TIME_OUT);
 	}
 
-	public static void type(By by, String value) {
-		element = driver.findElement(by);
+	public static void type(WebElement element, String value) {
 		element.click();
 		element.clear();
 		element.sendKeys(value);
 	}
 
-	public static void click(By by) {
-		element = driver.findElement(by);
+	public static void click(WebElement element) {
 		element.click();
 	}
 
-	public static void waitForVisibleOf(By by) {
-		wait = new WebDriverWait(driver, WAIT_TIME_OUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+	public static void waitForVisibleOf(WebElement element) {
+
+		wait.until(ExpectedConditions.visibilityOf(element));
 	}
 
-	public String getTextElement(By by) {
-		element = driver.findElement(by);
+	public String getTextElement(WebElement element) {
 		return element.getText();
 	}
 
 	public WebElement findElement(String key) {
+		WebElement element = null;
 		if (object.containsKey(key + ".id")) {
 			element = driver.findElement(By.id(object.getProperty(key + ".id")));
 		} else if (object.containsKey(key + ".xpath")) {
